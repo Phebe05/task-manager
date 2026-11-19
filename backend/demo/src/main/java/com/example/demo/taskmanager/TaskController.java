@@ -8,76 +8,49 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("api/tasks")
+public class TaskController {
 
-public class TaskController{
+    private final TaskService taskService;
 
-    private final TaskRepository repo;
-
-    public TaskController(TaskRepository repo){
-        this.repo = repo;
+    public TaskController(TaskService taskService) {
+        this.taskService = taskService;
     }
 
-    //get all tasks
+    // Get all tasks
     @GetMapping
-    public List<Task> getAll(){
-        return repo.findAll();
+    public List<Task> getAll() {
+        return taskService.getAllTasks();
     }
 
-    //get a task by its id
+    // Get a task by its ID
     @GetMapping("/{id}")
-    public Task getOne(@PathVariable Long id){
-        return repo.findById(id).orElseThrow(()-> new TaskNotFoundException(id));
+    public Task getOne(@PathVariable Long id) {
+        return taskService.getTaskById(id);
     }
 
-    //apply method to be used below
-    private void apply(Task task, TaskRequest req) {
-        task.setTitle(req.title().trim());
-        task.setDescription(req.description());
-        task.setStatus(req.status() != null ? req.status() : "pending");
-        task.setPriority(req.priority() != null ? req.priority() : "medium");
-        task.setDueDate(req.dueDate());
-    }
-
-    //creating new tasks
+    // Create a new task
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Task create(@Valid @RequestBody TaskRequest req){
-        Task task = new Task();
-        apply(task, req);
-        return repo.save(task);
+    public Task create(@Valid @RequestBody TaskRequest req) {
+        return taskService.createTask(req);
     }
 
-    //updating tasks(funny how putting means updating...initially thought it meant posting lol)
+    // Update an existing task
     @PutMapping("/{id}")
-    public Task update(@PathVariable Long id,@Valid @RequestBody TaskRequest req){
-        Task task = repo.findById(id).orElseThrow(()-> new TaskNotFoundException(id));
-        apply(task, req);
-        return repo.save(task);
+    public Task update(@PathVariable Long id, @Valid @RequestBody TaskRequest req) {
+        return taskService.updateTask(id, req);
     }
 
+    // Delete a task
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id){
-        if(!repo.existsById(id)){
-            throw new TaskNotFoundException(id);
-        }
-        repo.deleteById(id);
+    public void delete(@PathVariable Long id) {
+        taskService.deleteTask(id);
     }
 
-    //- PUT: Replace the task's information.
-    //- PATCH: Update only the information you specify.
+    // Partially update a task
     @PatchMapping("/{id}")
     public Task patch(@PathVariable Long id, @Valid @RequestBody TaskPatchRequest req) {
-        Task task = repo.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
-
-        // Only change the fields that were actually sent
-        if (req.title() != null) task.setTitle(req.title().trim());
-        if (req.description() != null) task.setDescription(req.description());
-        if (req.status() != null) task.setStatus(req.status());
-        if (req.priority() != null) task.setPriority(req.priority());
-        if (req.dueDate() != null) task.setDueDate(req.dueDate());
-
-        return repo.save(task);
+        return taskService.patchTask(id, req);
     }
-
 }

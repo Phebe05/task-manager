@@ -16,7 +16,7 @@ public class ApiExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
 
     public Map<String, String> notFound(TaskNotFoundException e){
-        return Map.of("error ", e.getMessage());
+        return Map.of("error", e.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -26,7 +26,7 @@ public class ApiExceptionHandler {
         String message = e.getBindingResult().getFieldErrors().stream()
                 .map(f -> f.getField() + " " + f.getDefaultMessage())
                 .collect(Collectors.joining(", "));
-        return Map.of("Error", message);
+        return Map.of("error", message);
     }
 
 }
