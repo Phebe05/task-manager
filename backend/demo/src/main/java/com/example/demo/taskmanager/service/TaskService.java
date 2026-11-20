@@ -1,5 +1,12 @@
-package com.example.demo.taskmanager;
+package com.example.demo.taskmanager.service;
 
+import com.example.demo.taskmanager.Priority;
+import com.example.demo.taskmanager.Status;
+import com.example.demo.taskmanager.dto.TaskPatchRequest;
+import com.example.demo.taskmanager.dto.TaskRequest;
+import com.example.demo.taskmanager.exceptions.TaskNotFoundException;
+import com.example.demo.taskmanager.model.Task;
+import com.example.demo.taskmanager.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 

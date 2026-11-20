@@ -6,9 +6,10 @@ interface ToolbarProps {
   sort: TaskSort;
   onSearchChange: (value: string) => void;
   onSortChange: (value: TaskSort) => void;
+  onNewTask: () => void; 
 }
 
-export function Toolbar({ search, sort, onSearchChange, onSortChange }: ToolbarProps) {
+export function Toolbar({ search, sort, onSearchChange, onSortChange, onNewTask }: ToolbarProps) {
   return (
     <div className="toolbar">
       <input
@@ -27,7 +28,7 @@ export function Toolbar({ search, sort, onSearchChange, onSortChange }: ToolbarP
           <option key={value} value={value}>{label}</option>
         ))}
       </select>
-      {/* The "New task" button arrives in step 4 */}
+      <button type="button" onClick={onNewTask}>+ New task</button>
     </div>
   );
 }

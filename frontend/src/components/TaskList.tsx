@@ -6,9 +6,10 @@ interface TaskListProps {
   loading: boolean;
   error: string | null;
   onToggle: (task: Task) => void;
+  onDelete: (id: number) => void
 }
 
-export function TaskList({ tasks, loading, error, onToggle }: TaskListProps) {
+export function TaskList({ tasks, loading, error, onToggle, onDelete }: TaskListProps) {
   if (error) {
     return <p className="status-message error" role="alert">Could not load tasks. {error}</p>;
   }
@@ -21,7 +22,7 @@ export function TaskList({ tasks, loading, error, onToggle }: TaskListProps) {
   return (
     <ul className="task-list">
       {tasks.map((task) => (
-        <TaskRow key={task.id} task={task} onToggle={onToggle} />
+        <TaskRow key={task.id} task={task} onToggle={onToggle} onDelete={onDelete} />
       ))}
     </ul>
   );

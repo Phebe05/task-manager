@@ -1,5 +1,9 @@
-package com.example.demo.taskmanager;
+package com.example.demo.taskmanager.model;
 
+import com.example.demo.taskmanager.Priority;
+import com.example.demo.taskmanager.PriorityConverter;
+import com.example.demo.taskmanager.Status;
+import com.example.demo.taskmanager.StatusConverter;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

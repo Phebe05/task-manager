@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
-import { getTasks, updateTask } from '../api/tasks';
-import type { Task, TaskStatus } from '../types/task';
+import { createTask, deleteTask, getTasks, updateTask,  } from '../api/tasks';
+import type { Task, TaskStatus, NewTask } from '../types/task';
 
 /** Loads tasks from the API and tracks loading and error state. */
 export function useTasks() {
@@ -38,5 +38,31 @@ export function useTasks() {
     void reload();
   }, [reload]);
 
-  return { tasks, loading, error, actionError, reload, toggleDone };
+  // Creates a task. Returns true on success so a form knows when to close.
+  const addTask = useCallback(async (task:NewTask) => {
+    setActionError(null);
+    try {
+      const created = await createTask(task);
+      setTasks((current) => [...current, created]);
+      return true;
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'Could not create the task');
+    return false;
+    }
+  }, []);
+
+  // Deletes a task and removes it from the list. 
+  const removeTask = useCallback(async (id:number) => {
+    setActionError(null);
+    try {
+      await deleteTask(id);
+      setTasks((current) => current.filter((t) => t.id !== id));
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'Could not delete the task');
+    }
+    
+  }, []);
+
+  
+  return { tasks, loading, error, actionError, removeTask, addTask, reload, toggleDone };
 }

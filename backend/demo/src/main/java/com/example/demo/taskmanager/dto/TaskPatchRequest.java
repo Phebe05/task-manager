@@ -1,5 +1,7 @@
-package com.example.demo.taskmanager;
+package com.example.demo.taskmanager.dto;
 
+import com.example.demo.taskmanager.Priority;
+import com.example.demo.taskmanager.Status;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 

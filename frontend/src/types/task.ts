@@ -3,6 +3,8 @@ export type TaskPriority = 'low' | 'medium' | 'high';
 export type TaskSort = 'due_date' | 'priority' | 'created_at';
 /** Any subset of the editable fields, as sent to PATCH /api/tasks/:id. */
 export type TaskPatch = Partial<Pick<Task, 'title' | 'description' | 'status' | 'priority' | 'dueDate'>>;
+export type NewTask = Pick<Task, 'title'> &
+  Partial<Pick<Task, 'description' | 'status' | 'priority' | 'dueDate'>>;
 
 /** A task exactly as the Spring Boot API returns it. */
 export interface Task {

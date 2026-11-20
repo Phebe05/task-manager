@@ -1,6 +1,5 @@
-package com.example.demo.taskmanager;
+package com.example.demo.taskmanager.exceptions;
 
-import com.example.demo.taskmanager.TaskNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
