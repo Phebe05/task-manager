@@ -2,28 +2,21 @@ import { useMemo, useState } from "react";
 import { Sidebar } from "./components/Sidebar";
 import { Toolbar } from "./components/Toolbar";
 import { TaskList } from "./components/TaskList";
-import { NewTaskForm } from "./components/NewTaskForm";
+import { TaskForm } from "./components/TaskForm";
 import { useTasks } from "./hooks/useTasks";
 import { applyFilters } from "./utils/taskFilters";
-import type { TaskFilters } from "./types/task";
+import type { Task, TaskFilters } from "./types/task";
 import { Modal } from "./components/Modal";
 
 export default function App() {
-  const {
-    tasks,
-    loading,
-    error,
-    actionError,
-    toggleDone,
-    addTask,
-    removeTask,
-  } = useTasks();
+  const { tasks, loading, error, actionError, toggleDone, addTask, editTask, removeTask, changeStatus } = useTasks();
   const [showForm, setShowForm] = useState(false);
   const [filters, setFilters] = useState<TaskFilters>({
     status: "",
     search: "",
     sort: "due_date",
   });
+  const [editing, setEditing] = useState<Task | null>(null);
 
   const visibleTasks = useMemo(
     () => applyFilters(tasks, filters),
@@ -46,7 +39,18 @@ export default function App() {
         />
 
         <Modal open={showForm} onClose={() => setShowForm(false)}>
-          <NewTaskForm onSubmit={addTask} onCancel={() => setShowForm(false)} />
+          <TaskForm onSubmit={addTask} onCancel={() => setShowForm(false)} />
+        </Modal>
+
+        <Modal open={editing !== null} onClose={() => setEditing(null)}>
+          {editing && (
+              <TaskForm
+                  key={editing.id}
+                  initial={editing}
+                  onSubmit={(task) => editTask(editing.id, task)}
+                  onCancel={() => setEditing(null)}
+              />
+          )}
         </Modal>
 
         {actionError && (
@@ -61,6 +65,8 @@ export default function App() {
           error={error}
           onToggle={toggleDone}
           onDelete={removeTask}
+          onEdit={setEditing}
+          onStatusChange={changeStatus}
         />
       </main>
     </div>

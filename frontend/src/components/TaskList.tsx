@@ -1,15 +1,17 @@
 import { TaskRow } from './TaskRow';
-import type { Task } from '../types/task';
+import type {Task, TaskStatus} from '../types/task';
 
 interface TaskListProps {
   tasks: Task[];
   loading: boolean;
   error: string | null;
   onToggle: (task: Task) => void;
-  onDelete: (id: number) => void
+  onDelete: (id: number) => void;
+  onEdit: (task: Task) => void;
+  onStatusChange: (id: number, status: TaskStatus) => void;
 }
 
-export function TaskList({ tasks, loading, error, onToggle, onDelete }: TaskListProps) {
+export function TaskList({ tasks, loading, error, onToggle, onDelete, onEdit, onStatusChange }: TaskListProps) {
   if (error) {
     return <p className="status-message error" role="alert">Could not load tasks. {error}</p>;
   }
@@ -22,7 +24,13 @@ export function TaskList({ tasks, loading, error, onToggle, onDelete }: TaskList
   return (
     <ul className="task-list">
       {tasks.map((task) => (
-        <TaskRow key={task.id} task={task} onToggle={onToggle} onDelete={onDelete} />
+        <TaskRow
+            key={task.id}
+            task={task}
+            onToggle={onToggle}
+            onDelete={onDelete}
+            onEdit={onEdit}
+            onStatusChange={onStatusChange} />
       ))}
     </ul>
   );

@@ -20,3 +20,9 @@ export const deleteTask = (id: number) =>
   request<void>(`/api/tasks/${id}`, {
     method: "DELETE",
   });
+
+export const replaceTask = (id: number, task: NewTask) =>
+    request<Task>(`/api/tasks/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(task),
+    });

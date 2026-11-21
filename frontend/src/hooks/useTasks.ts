@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
-import { createTask, deleteTask, getTasks, updateTask,  } from '../api/tasks';
+import { createTask, deleteTask, getTasks, updateTask, replaceTask } from '../api/tasks';
 import type { Task, TaskStatus, NewTask } from '../types/task';
+
 
 /** Loads tasks from the API and tracks loading and error state. */
 export function useTasks() {
@@ -63,6 +64,28 @@ export function useTasks() {
     
   }, []);
 
+  const editTask = useCallback(async (id: number, task: NewTask) => {
+    setActionError(null);
+    try {
+      const updated = await replaceTask(id, task);
+      setTasks((current) => current.map((t) => (t.id === updated.id ? updated : t)));
+      return true;
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'Could not update the task');
+      return false;
+    }
+  }, []);
+
+  const changeStatus = useCallback(async (id: number, status: TaskStatus) => {
+    setActionError(null);
+    try {
+      const updated = await updateTask(id, { status });
+      setTasks((current) => current.map((t) => (t.id === updated.id ? updated : t)));
+    } catch (err) {
+      setActionError(err instanceof Error ? err.message : 'Could not update the status');
+    }
+  }, []);
+
   
-  return { tasks, loading, error, actionError, removeTask, addTask, reload, toggleDone };
+  return { tasks, loading, error, actionError, removeTask, addTask, editTask, reload, toggleDone, changeStatus };
 }
