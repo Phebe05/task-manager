@@ -2,6 +2,7 @@ package com.example.demo.taskmanager.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -26,6 +27,12 @@ public class ApiExceptionHandler {
                 .map(f -> f.getField() + " " + f.getDefaultMessage())
                 .collect(Collectors.joining(", "));
         return Map.of("error", message);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> unreadable(HttpMessageNotReadableException e) {
+        return Map.of("error", "Malformed JSON request body");
     }
 
 }
